@@ -1,6 +1,7 @@
 
 import pymysql
 import time
+import datetime
 
 class BookManager:
     #连接数据库
@@ -63,21 +64,7 @@ class BookManager:
         else:
             print("账号或密码错误！")
             return False
-    def change_password(self):
-        old_password = input("输入旧密码：")
-        sql = "select * from admin where username=%s and password=%s"
-        self.cursor.execute(sql, (self.current_user, old_password))
-        if not self.cursor.fetchone():
-            print("旧密码错误，无法修改！")
-            return
-        new_password = input("输入新密码: ")
-        sql2 = "update admin set password=%s where username=%s"
-        try:
-            self.cursor.execute(sql2, (new_password, self.current_user))
-            self.conn.commit()
-            print("密码修改成功！")
-        except Exception as e:
-            print("修改失败:", e)
+
 
     def add_admin(self):
         print("1.新增账号")
@@ -114,7 +101,6 @@ class BookManager:
                 else:
                     print("账号不存在")
 
-
     # 1. 添加图书
     def add_book(self, book_id, title, author, publisher):
         try:
@@ -126,7 +112,6 @@ class BookManager:
         except Exception as e:
             self.conn.rollback()
             print("添加失败，图书编号可能已存在")
-
 
     # 2. 查询图书
     def search_book(self):
@@ -185,7 +170,6 @@ class BookManager:
             except Exception as e:
                 print(f"查询出错:{e}")
 
-
     # 4. 修改图书信息
     def update_book(self, book_id, new_author, new_publisher):
         try:
@@ -204,7 +188,7 @@ class BookManager:
     # 5. 删除图书
     def delete_book(self, book_id):
         try:
-            a=input(f"是否真的要删除{book_id}:")
+            a=input(f"是否真的要删除{book_id} 0.不删除/1.删除:")
             if a=='1':
                 sql = "DELETE FROM book WHERE book_id=%s"
                 self.cursor.execute(sql, book_id)
@@ -225,52 +209,85 @@ class BookManager:
     #6. 借阅图书
     def borrow_book(self, book_id):
         try:
-            # 先检查书是否存在且在馆
-            sql_check = "SELECT * FROM book WHERE book_id=%s AND status='在馆'"
-            self.cursor.execute(sql_check, book_id)
-            book = self.cursor.fetchone()
-
-            if not book:
-                print("借阅失败！可能是图书不存在或已被借出。")
+            # 1. 检查是否已借满 3 本
+            sql_count = "select count(*) from borrower where username=%s and status='借阅中'"
+            self.cursor.execute(sql_count, self.current_user)
+            count = self.cursor.fetchone()[0]
+            if count >= 3:
+                print("失败：每人最多只能借 3 本书！")
                 return
 
-            # 更新状态为借出
-            sql_update = "UPDATE book SET status='借出' WHERE book_id=%s"
-            self.cursor.execute(sql_update, book_id)
+            # 2. 检查书是否在馆
+            sql_check = "select * from book where book_id=%s and status='在馆'"
+            self.cursor.execute(sql_check,book_id)
+            book = self.cursor.fetchone()
+            if not book:
+                print("失败：书不在馆或不存在！")
+                return
+
+            # 3. 开始借书操作
+            now = datetime.datetime.now()  # 当前时间
+            due = now + datetime.timedelta(days=7)
+
+            sql_insert = "insert into borrower (book_id, username, borrow_time, return_time, status) values (%s, %s, %s, %s, %s)"
+            self.cursor.execute(sql_insert, (book_id, self.current_user, now, due, '借阅中'))
+
+            sql_update = "update book set status='借出' where book_id=%s"
+            self.cursor.execute(sql_update,book_id)
+
             self.conn.commit()
-            print(f"{book[1]}借阅成功！")
-            self.write_log(f"借阅图书：{book_id}")
-        except:
+            print(f"借阅成功！请在 {due.strftime('%Y-%m-%d')} 前归还。")
+
+        except Exception as e:
             self.conn.rollback()
-            print("借阅失败")
+            print("借阅出错：", e)
 
     # 7. 归还图书
     def return_book(self, book_id):
         try:
-            # 先检查书是否存在且是借出状态
-            sql_check = "SELECT * FROM book WHERE book_id=%s AND status='借出'"
-            self.cursor.execute(sql_check, book_id)
-            book = self.cursor.fetchone()
-
-            if not book:
-                print("归还失败！可能是图书不存在或状态异常。")
+            # 1. 检查这本书是否是你借的，且处于“借阅中”状态
+            sql = "select * from borrower where book_id=%s and username=%s and status='借阅中'"
+            self.cursor.execute(sql, (book_id, self.current_user))
+            record = self.cursor.fetchone()
+            if not record:
+                print("失败：你没有借阅这本书，或者已经归还了。")
                 return
 
-            # 更新状态为在馆
-            sql_update = "UPDATE book SET status='在馆' WHERE book_id=%s"
-            self.cursor.execute(sql_update, book_id)
+            # 2. 开始还书操作
+            sql_update_record = "update borrower set status='已归还' where book_id=%s"
+            self.cursor.execute(sql_update_record, book_id)
+
+            sql_update_book = "update book set status= '在馆' where book_id=%s"
+            self.cursor.execute(sql_update_book,book_id)
+
             self.conn.commit()
-            print(f"{book[1]}归还成功！")
-            self.write_log(f"归还图书：{book_id}")
-        except:
+            print("归还成功！")
+
+        except Exception as e:
             self.conn.rollback()
-            print("归还失败")
-    # 关闭数据库
+            print("归还出错：", e)
+
+    # 8. 修改密码
+    def change_password(self):
+        old_password = input("输入旧密码：")
+        sql = "select * from admin where username=%s and password=%s"
+        self.cursor.execute(sql, (self.current_user, old_password))
+        if not self.cursor.fetchone():
+            print("旧密码错误，无法修改！")
+            return
+        new_password = input("输入新密码: ")
+        sql2 = "update admin set password=%s where username=%s"
+        try:
+            self.cursor.execute(sql2, (new_password, self.current_user))
+            self.conn.commit()
+            print("密码修改成功！")
+        except Exception as e:
+            print("修改失败:", e)
+
+    #关闭
     def close(self):
         self.cursor.close()
         self.conn.close()
-
-
 
 def main():
     # 1. 实例化对象
@@ -305,10 +322,14 @@ def main():
                     choice = input("请输入功能编号：")
                     if choice == "1":
                         bid = input("请输入图书编号：")
-                        title = input("请输入书名：")
-                        author = input("请输入作者：")
-                        publisher = input("请输入分类：")
-                        lm.add_book(bid, title, author, publisher)
+                        if bid.isdigit():
+                            bid = int(bid)
+                            title = input("请输入书名: ")
+                            author = input("请输入作者: ")
+                            publisher = input("请输入分类: ")
+                            lm.add_book(bid, title, author, publisher)
+                        else:
+                            print("添加失败：图书编号必须是数字！")
 
                     elif choice == "2":
                         lm.search_book()
@@ -338,8 +359,6 @@ def main():
                         lm.add_admin()
 
                     elif choice == "0":
-                        lm.close()
-                        print("系统已退出，再见！")
                         break
 
                     else:
@@ -357,10 +376,14 @@ def main():
                     choice = input("请输入功能编号：")
                     if choice == "1":
                         bid = input("请输入图书编号：")
-                        title = input("请输入书名：")
-                        author = input("请输入作者：")
-                        publisher = input("请输入分类：")
-                        lm.add_book(bid, title, author, publisher)
+                        if bid.isdigit():
+                            bid = int(bid)
+                            title = input("请输入书名: ")
+                            author = input("请输入作者: ")
+                            publisher = input("请输入分类: ")
+                            lm.add_book(bid, title, author, publisher)
+                        else:
+                            print("添加失败：图书编号必须是数字！")
 
                     elif choice == "2":
                         lm.search_book()
@@ -387,8 +410,6 @@ def main():
                         lm.change_password()
 
                     elif choice == "0":
-                        lm.close()
-                        print("系统已退出，再见！")
                         break
 
                     else:
@@ -426,6 +447,7 @@ def main():
         else:
             lm.close()
             print("系统已退出，再见！")
+            break
 
 # 程序入口
 if __name__ == "__main__":
