@@ -1,0 +1,80 @@
+/* ====================== 1、元素选择器 权重 0,0,1 ====================== */
+/* 直接写标签名，选中页面全部同名标签 */
+p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #f30808;
+}
+nav {
+    background: hsla(14, 93%, 47%, 0.267);
+    padding: 10px;
+}
+ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    padding-left: 0;
+}
+
+/* ====================== 2、类选择器 权重 0,1,0 ====================== */
+/* . + class名称，匹配HTML里class="xxx" */
+.nav-item {
+    background: #f33737;
+    padding: 6px 14px;
+    border-radius: 4px;
+}
+.content-box {
+    min-height: 450px;
+    padding: 20px;
+    margin: 15px 0;
+    background: #fcfcfc;
+}
+.box-title {
+    color: #0e59f0;
+    font-size: 26px;
+}
+
+/* ====================== 3、ID选择器 权重 1,0,0 ====================== */
+/* # + id名称，页面唯一元素，权重最高 */
+#about {
+    border-left: 5px solid #683626;
+}
+
+/* ====================== 4、属性选择器 权重 0,1,0 ====================== */
+/* 根据标签自带属性筛选元素 */
+/* 匹配href以https开头的外部链接 */
+ul a[href^="https"] {
+    color: rgb(105, 90, 62);
+}
+ul a[href^="#"] {
+    color: #111;
+}
+
+/* ====================== 5、伪类选择器 权重 0,1,0 ====================== */
+/* : 匹配元素交互/位置状态 */
+/* 鼠标悬浮链接 */
+a:hover {
+    text-decoration: none;
+
+}
+/* 点击访问过后的链接，覆盖默认紫色 */
+a:visited {
+    color: #222;
+}
+/* 第一个导航li单独样式 */
+li:first-child {
+    margin-left: 20px;
+}
+
+/* ====================== 6、伪元素选择器 权重 0,0,1 ====================== */
+/* :: 生成页面虚拟内容，不存在真实HTML标签 */
+/* 所有段落第一行放大 */
+p::first-line {
+    font-size: 22px;
+    font-weight: bold;
+}
+/* 外部链接前面加外链图标 */
+a[href^="https"]::before {
+    content: "🔗";
+    margin-right: 10px;
+}

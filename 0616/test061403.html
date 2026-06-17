@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用于html展示</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 新增class类名，用于类选择器 -->
+    <header class="page-header">
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <!-- 页面内锚点跳转 -->
+                <li class="nav-item internal-link">
+                    <a href="#about">关于我</a>
+                </li>
+                <li class="nav-item internal-link">
+                    <a href="#skills">技能</a>
+                </li>
+                <li class="nav-item internal-link">
+                    <a href="#projects">项目</a>
+                </li>
+                <!-- 外部链接，href以https开头，用于属性选择器 -->
+                <li class="nav-item out-link">
+                    <a href="https://www.baidu.com/" target="_blank" rel="noopener noreferrer">百度一下</a>
+                </li>
+                <li class="nav-item out-link">
+                    <a href="https://csdn.net" target="_blank" rel="noopener noreferrer">技术博客</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- ID选择器目标 + 附加class -->
+        <section id="about" class="content-box">
+            <h2 class="box-title">关于我</h2>
+            <article class="text-wrap">
+                <p class="text-content">热爱编程的Python开发者，擅长数据分析与后端开发...</p>
+            </article>
+        </section>
+        
+        <section id="skills" class="content-box">
+            <h2 class="box-title">我掌握的技术</h2>
+            <article class="text-wrap">
+                <p class="text-content">熟练使用python、FastAPI、MySQL等技术栈</p>
+            </article>
+            <ul>
+                <li>1.熟练使用python </li>                                          
+            </ul>
+            <ul>
+                <li>2</li>
+            </ul>
+            <ul>
+                <li>3</li> 
+            </ul>
+            <ul>
+                <li>4</li>
+            </ul>
+            <ul>
+                <li>5</li>
+            </ul>
+        </section>
+
+        <aside class="sidebar">
+            <p class="contact-text">联系方式：example@email.com</p>
+        </aside>
+    </main>
+
+    <footer class="page-footer">
+        <p>&copy; 2026 张三的简历</p>
+    </footer>
+</body>
+</html>

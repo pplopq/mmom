@@ -184,7 +184,7 @@ class BookManager:
             self.conn.rollback()
             print("修改失败")
 
-    # 5. 删除图书
+    # new_3. 删除图书
     def delete_book(self, book_id):
         try:
             a=input(f"是否真的要删除{book_id} 0.不删除/1.删除:")
@@ -313,7 +313,7 @@ def main():
                     print("2. 查询图书")
                     print("3. 修改图书信息")
                     print("4. 删除图书")
-                    print("5. 借阅图书")
+                    print("new_3. 借阅图书")
                     print("6. 归还图书")
                     print("7. 修改密码")
                     print("8. 增加删除账户")
@@ -343,7 +343,7 @@ def main():
                         bid = input("请输入要删除的图书编号：")
                         lm.delete_book(bid)
 
-                    elif choice == "5":
+                    elif choice == "new_3":
                         bid = input("请输入要借阅的图书编号：")
                         lm.borrow_book(bid)
 
@@ -368,7 +368,7 @@ def main():
                     print("2. 查询图书 ")
                     print("3. 修改图书信息")
                     print("4. 删除图书")
-                    print("5. 借阅图书")
+                    print("new_3. 借阅图书")
                     print("6. 归还图书")
                     print("7. 修改密码")
                     print("0. 退出系统")
@@ -397,7 +397,7 @@ def main():
                         bid = input("请输入要删除的图书编号：")
                         lm.delete_book(bid)
 
-                    elif choice == "5":
+                    elif choice == "new_3":
                         bid = input("请输入要借阅的图书编号：")
                         lm.borrow_book(bid)
 

@@ -1,0 +1,273 @@
+/* 全局统一重置 */
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* 滚动时顶部留白，避免被固定导航遮挡 */
+}
+
+/* ---------------------- 顶部固定导航栏 ---------------------- */
+.fixed-nav {
+    width: 100%;
+    background-color: #2c3e50;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;   
+}
+
+.nav-ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    height: 60px;
+}
+
+.nav-ul li a {
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+.nav-ul li a:hover {
+    background-color: #3498db;
+}
+
+body{
+        margin-top: 150px;
+    }
+
+
+/* 统一内容顶部留白，避免电脑手机差距过大 */
+.content {
+    margin-top: 100px;
+}
+.section {
+    padding: 30px 20px;
+    min-height: auto;
+}
+
+/* ---------------------- 简历三大板块（关于我/技能/项目） ---------------------- */
+/* 删掉原来超大margin，改用统一上下内边距，排版更统一 */
+.a1 {
+    background-color: #e8f4fd;
+    padding: 20px;
+    width: 90%;
+    margin: 0 auto 40px;
+    border-radius: 8px;
+}
+.a2 {
+    background-color: #fef6e7;
+    padding: 20px;
+    width: 90%;
+    margin: 0 auto 40px;
+    border-radius: 8px;
+}
+.a3 {
+    background-color: #c9f9d2;
+    padding: 20px;
+    width: 90%;
+    margin: 0 auto 40px;
+    border-radius: 8px;
+}
+
+/* ---------------------- 头像与个人信息模块 ---------------------- */
+.father {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #eee;
+}
+.badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #09e718;
+}
+img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.word p {
+    margin: 8px 0;
+    font-size: 18px;
+    color: #ff0404b9;
+    text-align: center;
+}
+.b1 {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    justify-content: center;
+}
+
+/* ---------------------- 技能列表样式 ---------------------- */
+.skill-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 15px;
+}
+.skill-list li:nth-child(odd) {
+    background-color: #0a5bd4;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+.skill-list li:nth-child(even) {
+    background-color: #ef520fa8;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+
+/* ---------------------- 通用标题样式 ---------------------- */
+h2 {
+    position: relative;
+    padding-left: 16px;
+    margin-bottom: 16px; 
+
+}
+h2::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 6px;
+    height: 20px;
+    background-color: #e74c3c;
+   
+}
+
+/* ---------------------- 简历左右布局 ---------------------- */
+.resume-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+    margin-top:20px;
+}
+.sidebar, .main-content {
+    flex: 1;
+    padding: 10px;
+}
+
+/* ---------------------- 顶部简历头部渐变卡片 ---------------------- */
+.resume-header {
+    width: 90%;
+    margin: 30px auto;
+    padding: 40px;
+    background: linear-gradient(135deg, #dbdce0, #edc33a 100%);
+    color: white;
+    border-radius: 16px;
+}
+.name-title {
+    background: linear-gradient(98deg, #2563eb, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+/* ---------------------- 项目卡片容器 ---------------------- */
+.card-wrap {
+    width: 100%;
+    margin: 20px auto 0;
+    display: flex;
+    gap: 20px;
+}
+.project-card {
+    flex: 1;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(255, 16, 16, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #f8f7f7;
+}
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(193, 177, 177, 0.12);
+}
+
+/* ---------------------- 响应式媒体查询 ---------------------- */
+/* 桌面端 ≥768px */
+@media (min-width: 768px) {
+    .resume-layout {
+        flex-direction: row;
+        text-align: left;
+    }
+    .sidebar {
+        flex: 0 0 240px;
+    }
+    .word p {
+        text-align: left;
+    }
+}
+
+/* 手机端 ≤767px */
+@media (max-width: 767px) {
+    /* 导航垂直排列，固定顶部 */
+    .nav-ul {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 0;
+        gap: 15px;
+    }
+    /* 手机导航变高，微调上边距，和电脑差距缩小 */
+    .content {
+        margin-top: 160px;
+    }
+    /* 卡片竖排 */
+    .card-wrap {
+        flex-direction: column;
+    }
+    /* 头像文字垂直居中 */
+    .b1 {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* ========== 3. 技能进度条过渡动画 ========== */
+.skill-box {
+    width: 90%;
+    margin: 0 auto;
+}
+/* 进度条底层灰色背景轨道 */
+.skill-bar {
+    width: 100%;
+    height: 8px;
+    background: #f1eaea;
+    border-radius: 4px;
+    margin: 10px 0 25px;
+}
+/* 进度条填充色块 */
+.skill-bar-fill {
+    height: 8px;
+    /* 横向蓝紫渐变填充 */
+    background: linear-gradient(90deg, #19df80, #efec16);
+    border-radius: 4px;
+    width: 15%; /* 初始宽度为0，进度完全隐藏 */
+    /* width属性发生变化时，执行1秒缓出平滑过渡 */
+    transition: width 10s ease-out;
+}
+/* 添加animated类后，宽度变为85%，自动播放拉长动画 */
+.skill-bar-fill:hover {
+    width: 100%;
+}
